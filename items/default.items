@@ -1,0 +1,52 @@
+Group Hem
+Group gBelysning (Hem)
+Group gSensorer (Hem)
+Group gMV (Hem)
+
+
+Group:Switch:OR(ON,OFF) Belysning "Belysning [(%d)]" (Hem)
+
+/* Lights */
+
+Switch Kitchen1 "Kökslampa höger" <switch> (Belysning, gBelysning) {tellstick="Proove 1:Command"}
+Switch Kitchen2 "Kökslampa vänster" <switch> (Belysning, gBelysning) {tellstick="Proove 2:Command"}
+Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning) {tellstick="Nexa 1:Command"}
+
+/* Outlets */
+
+Switch GarageOutlet "Uttag garage" <socket> (Hem) {tellstick="Garage:Command"}
+
+/* Car warmer */
+Number MvTimerNow "Starta nu och kör" <"smartheater-on"> (gMV) //{autoupdate="false"}
+Number MvTimerDelay "Starta om" <smartheater> (gMV)
+Number MvTimerStart "Starta vid angiven tidpunkt imorgon" <smartheater> (gMV)
+
+String MvStatus "Status [%s]" <selfInfo> (gMV)
+
+Switch MvZero "Nollställ tider" <calendar> (gMV) {autoupdate="false"}
+
+/* Sensors */
+
+Number  Inne_Temp "Inne Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="183:Temperature"}
+Number  Ute_Temp "Ute Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="184:Temperature"}
+
+Number  Inne_Fukt "Relativ Fukt Inne [%.1f °]" <temperature> (gSensorer) {tellstick="183:Humidity"}
+
+
+/* Astro items */
+
+// shows the sunrise
+DateTime Sunrise_Time  "Uppgång [%1$tH:%1$tM]"  <sun> {astro="planet=sun, type=rise, property=start"}
+// shows the sunset
+DateTime Sunset_Time   "Nergång [%1$tH:%1$tM]"  <moon> {astro="planet=sun, type=set, property=end"}
+
+
+// schedules a event which starts at sunrise, updating the Switch with ON, followed by a OFF
+Switch Sunrise_Event   {astro="planet=sun, type=rise, property=start"}
+
+// schedules a event which starts 30 minutes AFTER sunrise
+Switch Sunrise_Event_Offset   {astro="planet=sun, type=rise, property=start, offset=30"}
+
+
+// schedules a event which starts 30 minutes BEFORE sunset:
+Switch Sunset_Event_Offset    {astro="planet=sun, type=set, property=end, offset=-30"}

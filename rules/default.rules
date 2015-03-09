@@ -1,0 +1,158 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import java.lang.Double
+
+var Timer timerMv
+
+rule "Initialize startup"
+when
+	System started
+then
+	logInfo("openhab init...", "disable all lights")
+	Belysning?.members.forEach(light | sendCommand(light, OFF))
+	sendCommand(GarageOutlet, OFF)
+	
+	postUpdate(MvZero, OFF)
+end
+
+
+rule "Rule at sunset"
+when
+    Item Sunset_Event_Offset received update ON
+then
+    logInfo("Sun is going away...", "Time: " + Sunset_Time)
+    
+    Belysning?.members.forEach(light | sendCommand(light, ON))
+end
+
+rule "Rule at sunrise"
+when
+    Item Sunrise_Event_Offset received update ON
+then
+    logInfo("Sun is rising...", "Time: " + Sunrise_Time)
+    
+    Belysning?.members.forEach(light | sendCommand(light, OFF))
+end
+
+rule "Turn off lights in the night"
+when 
+	Time cron "0 59 23 * * ?"
+then
+    Belysning?.members.forEach(light | sendCommand(light, OFF))
+end
+
+rule "Turn on winter morning lights"
+when 
+	Time cron "0 10 6 * * ?"
+then
+	var month = now.getMonthOfYear()
+	if (month < 3 || month > 8) {
+	    Belysning?.members.forEach(light | sendCommand(light, ON))
+	}
+end
+
+
+rule "Turn on Mv now"
+when
+	Item MvTimerNow received command
+then
+	if (timerMv != null) {
+		timerMv.cancel
+		timerMv = null
+	}
+
+	sendCommand(GarageOutlet, ON)
+	
+	var minutes = (receivedCommand as DecimalType * 60).intValue
+	
+	timerMv = createTimer(now.plusMinutes(minutes)) [|
+		sendCommand(GarageOutlet, OFF)
+		postUpdate(MvZero,OFF)
+	]
+	
+	postUpdate(MvStatus, "Active Now")
+	postUpdate(MvTimerDelay, 0)
+	postUpdate(MvTimerStart, 0)
+	
+	logInfo("Timer OFF in minutes...", "" + minutes)
+end 
+
+rule "Turn on Mv delayed"
+when
+	Item MvTimerDelay received command
+then
+	if (timerMv != null) {
+		timerMv.cancel
+		timerMv = null
+	}
+
+	sendCommand(GarageOutlet, OFF)
+	
+	var minutes = (receivedCommand as DecimalType).intValue
+	
+	timerMv = createTimer(now.plusMinutes(minutes)) [|
+		sendCommand(GarageOutlet, ON)
+
+		// Turn off after 2 hours		
+		timerMv = createTimer(now.plusMinutes(120)) [|
+			sendCommand(GarageOutlet, OFF)
+			postUpdate(MvZero,OFF)
+		]
+	]
+	
+	postUpdate(MvStatus, "Delayed")
+	postUpdate(MvTimerNow, 0)
+	postUpdate(MvTimerStart, 0)
+	
+	logInfo("Time ON in minutes...", "" + minutes)
+end 
+
+rule "Turn on Mv start"
+when
+	Item MvTimerStart received command
+then
+	if (timerMv != null) {
+		timerMv.cancel
+		timerMv = null
+	}
+
+	sendCommand(GarageOutlet, OFF)
+	
+	var minutesAfterMidnight = (receivedCommand as DecimalType / 10 * 60).intValue
+	
+	var start = now.toLocalDate.plusDays(1).toDateTimeAtStartOfDay.plusMinutes(minutesAfterMidnight)
+	
+	timerMv = createTimer(start) [|
+		sendCommand(GarageOutlet, ON)
+
+		// Turn off after 2 hours		
+		timerMv = createTimer(now.plusMinutes(120)) [|
+			sendCommand(GarageOutlet, OFF)
+			postUpdate(MvZero,OFF)
+		]
+	]
+	
+	postUpdate(MvStatus, "Starttid")
+	postUpdate(MvTimerNow, 0)
+	postUpdate(MvTimerDelay, 0)
+	
+	logInfo("Time ON tomorrow at...", "" + start)
+end 
+
+rule "Mv Zero"
+when
+	Item MvZero received command
+then
+	if (timerMv != null) {
+		timerMv.cancel
+		timerMv = null
+	}
+
+	postUpdate(MvStatus, "Nollställd")
+	postUpdate(MvTimerNow, 0)
+	postUpdate(MvTimerDelay, 0)
+	postUpdate(MvTimerStart, 0)
+	
+	logInfo("Zero out...", "")
+end 
