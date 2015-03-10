@@ -49,4 +49,4 @@ Switch Sunrise_Event_Offset   {astro="planet=sun, type=rise, property=start, off
 
 
 // schedules a event which starts 30 minutes BEFORE sunset:
-Switch Sunset_Event_Offset    {astro="planet=sun, type=set, property=end, offset=-30"}
+Switch Sunset_Event_Offset    {astro="planet=sun, type=set, property=end, offset=-10"}

@@ -9,11 +9,13 @@ rule "Initialize startup"
 when
 	System started
 then
-	logInfo("openhab init...", "disable all lights")
-	Belysning?.members.forEach(light | sendCommand(light, OFF))
-	sendCommand(GarageOutlet, OFF)
-	
-	postUpdate(MvZero, OFF)
+	// Delay init to make sure persistance restoration has been done
+	createTimer(now.plusSeconds(5)) [|
+		logInfo("openhab startup timer init...", "disable/enable all to last state")
+		gBelysning?.members.forEach(light | sendCommand(light, light.state as OnOffType))
+		sendCommand(GarageOutlet, GarageOutlet.state as OnOffType)
+		postUpdate(MvZero, OFF)
+	]
 end
 
 
@@ -68,7 +70,7 @@ then
 	
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
 		sendCommand(GarageOutlet, OFF)
-		postUpdate(MvZero,OFF)
+		sendCommand(MvZero,OFF)
 	]
 	
 	postUpdate(MvStatus, "Active Now")
@@ -97,7 +99,7 @@ then
 		// Turn off after 2 hours		
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
-			postUpdate(MvZero,OFF)
+			sendCommand(MvZero,OFF)
 		]
 	]
 	
@@ -129,7 +131,7 @@ then
 		// Turn off after 2 hours		
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
-			postUpdate(MvZero,OFF)
+			sendCommand(MvZero,OFF)
 		]
 	]
 	
