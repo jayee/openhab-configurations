@@ -17,20 +17,18 @@ Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning) {tellstic
 Switch GarageOutlet "Uttag garage" <socket> (Hem) {tellstick="Garage:Command"}
 
 /* Car warmer */
-Number MvTimerNow "Starta nu och kör" <"smartheater-on"> (gMV) //{autoupdate="false"}
+Number MvTimerNow "Starta nu och kör" <"smartheater-on"> (gMV)
 Number MvTimerDelay "Starta om" <smartheater> (gMV)
 Number MvTimerStart "Starta vid angiven tidpunkt imorgon" <smartheater> (gMV)
 
 String MvStatus "Status [%s]" <selfInfo> (gMV)
-
-Switch MvZero "Nollställ tider" <calendar> (gMV) {autoupdate="false"}
 
 /* Sensors */
 
 Number  Inne_Temp "Inne Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="183:Temperature"}
 Number  Ute_Temp "Ute Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="184:Temperature"}
 
-Number  Inne_Fukt "Relativ Fukt Inne [%.1f °]" <temperature> (gSensorer) {tellstick="183:Humidity"}
+Number  Inne_Fukt "Relativ Fukt Inne [%.1f%%]" <temperature> (gSensorer) {tellstick="183:Humidity"}
 
 
 /* Astro items */

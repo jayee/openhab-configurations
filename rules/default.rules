@@ -14,7 +14,6 @@ then
 		logInfo("openhab startup timer init...", "disable/enable all to last state")
 		gBelysning?.members.forEach(light | sendCommand(light, light.state as OnOffType))
 		sendCommand(GarageOutlet, GarageOutlet.state as OnOffType)
-		postUpdate(MvZero, OFF)
 	]
 end
 
@@ -66,14 +65,13 @@ then
 
 	sendCommand(GarageOutlet, ON)
 	
-	var minutes = (receivedCommand as DecimalType * 60).intValue
+	var minutes = (receivedCommand as DecimalType).intValue
 	
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
 		sendCommand(GarageOutlet, OFF)
-		sendCommand(MvZero,OFF)
 	]
 	
-	postUpdate(MvStatus, "Active Now")
+	postUpdate(MvStatus, "Aktiv")
 	postUpdate(MvTimerDelay, 0)
 	postUpdate(MvTimerStart, 0)
 	
@@ -99,7 +97,6 @@ then
 		// Turn off after 2 hours		
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
-			sendCommand(MvZero,OFF)
 		]
 	]
 	
@@ -131,11 +128,10 @@ then
 		// Turn off after 2 hours		
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
-			sendCommand(MvZero,OFF)
 		]
 	]
 	
-	postUpdate(MvStatus, "Starttid")
+	postUpdate(MvStatus, "Starttid " + start.getHourOfDay + ":" + start.getMinuteOfHour)
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerDelay, 0)
 	
@@ -144,7 +140,7 @@ end
 
 rule "Mv Zero"
 when
-	Item MvZero received command
+	Item GarageOutlet received command OFF
 then
 	if (timerMv != null) {
 		timerMv.cancel
@@ -155,6 +151,6 @@ then
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerDelay, 0)
 	postUpdate(MvTimerStart, 0)
-	
+		
 	logInfo("Zero out...", "")
 end 
