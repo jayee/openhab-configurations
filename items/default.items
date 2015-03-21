@@ -11,6 +11,7 @@ Group:Switch:OR(ON,OFF) Belysning "Belysning [(%d)]" (Hem)
 Switch Kitchen1 "Kökslampa höger" <switch> (Belysning, gBelysning) {tellstick="Proove 1:Command"}
 Switch Kitchen2 "Kökslampa vänster" <switch> (Belysning, gBelysning) {tellstick="Proove 2:Command"}
 Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning) {tellstick="Nexa 1:Command"}
+Switch LivingRoom2 "Dekorbelysning" <switch> (gBelysning) {tellstick="Nexa 2:Command"}
 
 /* Outlets */
 
@@ -25,10 +26,13 @@ String MvStatus "Status [%s]" <selfInfo> (gMV)
 
 /* Sensors */
 
-Number  Inne_Temp "Inne Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="183:Temperature"}
+Number  Inne_Temp "Inne Temperatur Lokes rum [%.1f °C]" <temperature> (gSensorer) {tellstick="183:Temperature"}
 Number  Ute_Temp "Ute Temperatur [%.1f °C]" <temperature> (gSensorer) {tellstick="184:Temperature"}
 
-Number  Inne_Fukt "Relativ Fukt Inne [%.1f%%]" <temperature> (gSensorer) {tellstick="183:Humidity"}
+Number  Inne_Fukt "Relativ Fukt Inne Lokes rum [%.1f%%]" <temperature> (gSensorer) {tellstick="183:Humidity"}
+
+Number  Inne_Temp_Sovrum "Inne Temperatur Sovrum [%.1f °C]" <temperature> (gSensorer) {tellstick="151:Temperature"}
+Number  Inne_Fukt_Sovrum "Relativ Fukt Inne Sovrum [%.1f%%]" <temperature> (gSensorer) {tellstick="151:Humidity"}
 
 
 /* Astro items */
