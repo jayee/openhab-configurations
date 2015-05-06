@@ -24,7 +24,15 @@ when
 then
     logInfo("Sun is going away...", "Time: " + Sunset_Time)
     
-    Belysning?.members.forEach(light | sendCommand(light, ON))
+    // Light On more group
+    gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
+
+    var lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + " 20:00"
+
+    // Do not turn on light in lesser light group if after 20 in evening
+    if (parse(lessLimit).beforeNow) {
+		gLesserLightOn?.members.forEach(light | sendCommand(light, ON))
+    }
 end
 
 rule "Rule at sunrise"
