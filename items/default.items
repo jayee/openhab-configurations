@@ -11,8 +11,8 @@ Group:Switch:OR(ON,OFF) Belysning "Belysning [(%d)]" (Hem)
 
 /* Lights */
 
-Switch Kitchen1 "Kökslampa höger" <switch> (Belysning, gBelysning, gAlwaysLightOn) {tellstick="Proove 1:Command"}
-Switch Kitchen2 "Kökslampa vänster" <switch> (Belysning, gBelysning, gAlwaysLightOn) {tellstick="Proove 2:Command"}
+Switch Kitchen1 "Kökslampa höger" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 1:Command"}
+Switch Kitchen2 "Kökslampa vänster" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 2:Command"}
 Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Nexa 1:Command"}
 Switch LivingRoom2 "Dekorbelysning" <switch> (gBelysning) {tellstick="Nexa 2:Command"}
 Switch Bedroom1 "Sovrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 2:Command"}

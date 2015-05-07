@@ -27,10 +27,10 @@ then
     // Light On more group
     gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
 
-    var lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + " 20:00"
+    var lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + "T20:00:00"
 
     // Do not turn on light in lesser light group if after 20 in evening
-    if (parse(lessLimit).beforeNow) {
+    if (parse(lessLimit).afterNow) {
 		gLesserLightOn?.members.forEach(light | sendCommand(light, ON))
     }
 end
@@ -70,6 +70,8 @@ then
 		timerMv.cancel
 		timerMv = null
 	}
+
+	sendCommand(Sunset_Event_Offset, ON)
 
 	sendCommand(GarageOutlet, ON)
 	
