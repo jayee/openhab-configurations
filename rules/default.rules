@@ -71,7 +71,11 @@ then
 		timerMv = null
 	}
 
-	sendCommand(Sunset_Event_Offset, ON)
+	/*
+	 * Sample event triggering
+	 sendCommand(Sunset_Event_Offset, ON)
+	 * 
+	 */
 
 	sendCommand(GarageOutlet, ON)
 	
