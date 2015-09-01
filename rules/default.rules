@@ -56,8 +56,8 @@ when
 	Time cron "0 10 6 * * ?"
 then
 	var month = now.getMonthOfYear()
-	if (month < 3 || month > 8) {
-	    Belysning?.members.forEach(light | sendCommand(light, ON))
+	if (month < 3 || month > 9) {
+	    gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
 	}
 end
 
