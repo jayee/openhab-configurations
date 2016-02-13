@@ -17,6 +17,7 @@ Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning, gLesserLi
 Switch LivingRoom2 "Dekorbelysning" <switch> (gBelysning) {tellstick="Nexa 2:Command"}
 Switch Bedroom1 "Sovrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 2:Command"}
 Switch ChildRoom2 "Barnrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 1:Command"}
+Switch UpStairs "Hall uppe" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 3:Command"}
 
 
 /* Outlets */

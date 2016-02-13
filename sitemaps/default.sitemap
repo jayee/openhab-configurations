@@ -4,26 +4,26 @@ sitemap default label="Hem" {
      /*Group item=Belysning label="Belysning" icon="switch"*/
      Group item=gBelysning label="Lampor" icon="switch"
   }
-  
-  
+
+
   Frame label="Motorvärmare" {
   	 Switch item=GarageOutlet mappings=[OFF="Av", ON="På"]
-  	 
+
   	 Text item=MvStatus
-  	 
+
   	 Switch item=MvTimerNow mappings=[60="1 timme", 120="2 timmar", 180="3 timmar"]
   	 Switch item=MvTimerDelay mappings=[30="30 min", 60="1 timme", 120="2 timmar", 180="3 timmar"]
-  	 Selection item=MvTimerStart mappings=[55="05:30", 60="06:00", 65="06:30", 70="07:00", 75="07:30", 80="08:00", 85="08:30", 90="09:00"]
+  	 Selection item=MvTimerStart mappings=[55="05:30", 60="06:00", 65="06:30", 70="07:00", 75="07:30", 80="08:00", 85="08:30", 90="09:00", 95="09:30"]
   }
-  
+
   Frame label="Sensorer" {
      Group item=gSensorer label="Sensorer" icon="temperature"
   }
-  
+
   Frame label="Dygnet"{
   	Text item=Sunrise_Time
   	Text item=Sunset_Time
   }
-  
+
 }
 

@@ -23,7 +23,7 @@ when
     Item Sunset_Event_Offset received update ON
 then
     logInfo("Sun is going away...", "Time: " + Sunset_Time)
-    
+
     // Light On more group
     gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
 
@@ -31,7 +31,7 @@ then
 
     // Do not turn on light in lesser light group if after 20 in evening
     if (parse(lessLimit).afterNow) {
-		gLesserLightOn?.members.forEach(light | sendCommand(light, ON))
+		  gLesserLightOn?.members.forEach(light | sendCommand(light, ON))
     }
 end
 
@@ -40,19 +40,19 @@ when
     Item Sunrise_Event_Offset received update ON
 then
     logInfo("Sun is rising...", "Time: " + Sunrise_Time)
-    
+
     Belysning?.members.forEach(light | sendCommand(light, OFF))
 end
 
 rule "Turn off lights in the night"
-when 
+when
 	Time cron "0 59 23 * * ?"
 then
     Belysning?.members.forEach(light | sendCommand(light, OFF))
 end
 
 rule "Turn on winter morning lights"
-when 
+when
 	Time cron "0 10 6 * * ?"
 then
 	var month = now.getMonthOfYear()
@@ -74,23 +74,23 @@ then
 	/*
 	 * Sample event triggering
 	 sendCommand(Sunset_Event_Offset, ON)
-	 * 
+	 *
 	 */
 
 	sendCommand(GarageOutlet, ON)
-	
+
 	var minutes = (receivedCommand as DecimalType).intValue
-	
+
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
 		sendCommand(GarageOutlet, OFF)
 	]
-	
+
 	postUpdate(MvStatus, "Aktiv")
 	postUpdate(MvTimerDelay, 0)
 	postUpdate(MvTimerStart, 0)
-	
+
 	logInfo("Timer OFF in minutes...", "" + minutes)
-end 
+end
 
 rule "Turn on Mv delayed"
 when
@@ -102,24 +102,24 @@ then
 	}
 
 	sendCommand(GarageOutlet, OFF)
-	
+
 	var minutes = (receivedCommand as DecimalType).intValue
-	
+
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
 		sendCommand(GarageOutlet, ON)
 
-		// Turn off after 2 hours		
+		// Turn off after 2 hours
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
 		]
 	]
-	
+
 	postUpdate(MvStatus, "Delayed")
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerStart, 0)
-	
+
 	logInfo("Time ON in minutes...", "" + minutes)
-end 
+end
 
 rule "Turn on Mv start"
 when
@@ -131,26 +131,26 @@ then
 	}
 
 	sendCommand(GarageOutlet, OFF)
-	
+
 	var minutesAfterMidnight = (receivedCommand as DecimalType / 10 * 60).intValue
-	
+
 	var start = now.toLocalDate.plusDays(1).toDateTimeAtStartOfDay.plusMinutes(minutesAfterMidnight)
-	
+
 	timerMv = createTimer(start) [|
 		sendCommand(GarageOutlet, ON)
 
-		// Turn off after 2 hours		
+		// Turn off after 2 hours
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
 		]
 	]
-	
+
 	postUpdate(MvStatus, "Starttid " + start.getHourOfDay + ":" + start.getMinuteOfHour)
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerDelay, 0)
-	
+
 	logInfo("Time ON tomorrow at...", "" + start)
-end 
+end
 
 rule "Mv Zero"
 when
@@ -165,6 +165,6 @@ then
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerDelay, 0)
 	postUpdate(MvTimerStart, 0)
-		
+
 	logInfo("Zero out...", "")
-end 
+end
