@@ -5,5 +5,5 @@ Strategies {
 }
 
 Items {
-	gBelysning*,GarageOutlet : strategy = everyChange, restoreOnStartup
+	gBelysning*,GarageOutlet,Inne_Temp,Ute_Temp : strategy = everyChange, restoreOnStartup
 }
