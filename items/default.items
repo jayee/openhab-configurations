@@ -6,6 +6,7 @@ Group gMV (Hem)
 /* Function groups */
 Group gMoreLightOn
 Group gLesserLightOn
+Group gNightLights
 
 Group:Switch:OR(ON,OFF) Belysning "Belysning [(%d)]" (Hem)
 
@@ -17,7 +18,7 @@ Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning, gLesserLi
 Switch LivingRoom2 "Dekorbelysning" <switch> (gBelysning) {tellstick="Nexa 2:Command"}
 Switch Bedroom1 "Sovrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 2:Command"}
 Switch ChildRoom2 "Barnrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 1:Command"}
-Switch UpStairs "Hall uppe" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 3:Command"}
+Switch UpStairs "Hall uppe" <switch> (Belysning, gBelysning, gMoreLightOn, gNightLights) {tellstick="Extra Belysning 3:Command"}
 Switch Hallway "Hallen" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 3:Command"}
 
 

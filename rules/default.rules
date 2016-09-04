@@ -48,7 +48,8 @@ rule "Turn off lights in the night"
 when
 	Time cron "0 59 23 * * ?"
 then
-    Belysning?.members.forEach(light | sendCommand(light, OFF))
+	// Omit the lights in the night lights group
+    Belysning?.members.forEach(light | if (!gNightLights?.members.contains(light)) sendCommand(light, OFF))
 end
 
 rule "Turn on winter morning lights"
