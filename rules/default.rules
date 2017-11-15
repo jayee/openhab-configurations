@@ -4,6 +4,7 @@ import org.openhab.model.script.actions.*
 import java.lang.Double
 
 var Timer timerMv
+var Number departureMinutesAfterMidnight
 
 rule "Initialize startup"
 when
@@ -12,6 +13,7 @@ then
 	// Delay init to make sure persistance restoration has been done
 	createTimer(now.plusSeconds(5)) [|
 		logInfo("openhab startup timer init...", "disable/enable all to last state")
+		departureMinutesAfterMidnight = 0
 		gBelysning?.members.forEach(light | sendCommand(light, light.state as OnOffType))
 		sendCommand(GarageOutlet, GarageOutlet.state as OnOffType)
 	]
@@ -60,6 +62,58 @@ then
 	if (month < 3 || month > 9) {
 	    gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
 	}
+end
+
+rule "Turn on Mv dynamically week days depending of temperature"
+when
+	Time cron "0 1/5 3-8 ? * MON-FRI *"
+	//Time cron "10/10 * 19-22 * * ?"
+then
+	// We have a dynamic setting
+	if (departureMinutesAfterMidnight > 0) {
+		var departure = now.toLocalDate.toDateTimeAtStartOfDay.plusMinutes(departureMinutesAfterMidnight.intValue)
+		
+		// Move start time back depending of temperature
+		var start = departure.plusMinutes(-20); // Add 20 minutes as default
+		
+		var int temp = (Ute_Temp.state as DecimalType).intValue
+		if (temp < 0) {
+			start = start.plusMinutes(6 * temp)
+		}
+
+		//logInfo("times", "start: " + start + " departure: " + departure + " now: " + now)
+
+		// Time to turn on?
+		if (start.beforeNow && departure.afterNow) {
+			// Only start if not already active
+			if ((GarageOutlet.state as OnOffType) == OFF) {
+				logInfo("Turning on Mv", "Temperature outside: " + Ute_Temp.state)
+				
+				sendCommand(GarageOutlet, ON)
+		
+				// Turn off after 3 hours
+				timerMv = createTimer(now.plusMinutes(180)) [|
+					sendCommand(GarageOutlet, OFF)
+			]
+			}
+		}
+		
+	}
+end
+
+
+rule "Turn on Mv weekday mornings"
+when
+	Item MvWeekDaysDynamic received command
+then
+	departureMinutesAfterMidnight = (receivedCommand as DecimalType / 10 * 60).intValue
+
+	if (departureMinutesAfterMidnight > 0) {
+		postUpdate(MvStatus, "Dynamisk")
+	} else {
+		postUpdate(MvStatus, "Nollställd")
+	}
+
 end
 
 
@@ -115,7 +169,7 @@ then
 		]
 	]
 
-	postUpdate(MvStatus, "Delayed")
+	postUpdate(MvStatus, "Fördröjd")
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerStart, 0)
 
@@ -162,7 +216,12 @@ then
 		timerMv = null
 	}
 
-	postUpdate(MvStatus, "Nollställd")
+	if (departureMinutesAfterMidnight > 0) {
+		postUpdate(MvStatus, "Dynamisk")	
+	} else {
+		postUpdate(MvStatus, "Nollställd")
+	}
+	
 	postUpdate(MvTimerNow, 0)
 	postUpdate(MvTimerDelay, 0)
 	postUpdate(MvTimerStart, 0)
