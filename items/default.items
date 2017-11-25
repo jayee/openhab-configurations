@@ -33,6 +33,9 @@ Switch Y "Y" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 5
 Switch GarageOutlet "Uttag garage" <socket> (Hem) {tellstick="Garage:Command"}
 
 /* Car warmer */
+
+Switch CarOutlet "Kupévärmare" <socket> (Hem) {tellstick="Uteswitch 1:Command"}
+
 Number MvWeekDaysDynamic "Avresetid vardagsmorgon" <smartheater> (gMV)
 Number MvTimerNow "Starta nu och kör" <"smartheater-on"> (gMV)
 Number MvTimerDelay "Starta om" <smartheater> (gMV)

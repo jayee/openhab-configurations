@@ -17,6 +17,7 @@ then
 		sendCommand(MvWeekDaysDynamic, MvWeekDaysDynamic.state as DecimalType)
 		gBelysning?.members.forEach(light | sendCommand(light, light.state as OnOffType))
 		sendCommand(GarageOutlet, GarageOutlet.state as OnOffType)
+		sendCommand(CarOutlet, CarOutlet.state as OnOffType)
 	]
 end
 
@@ -86,16 +87,40 @@ then
 
 		// Time to turn on?
 		if (start.beforeNow && departure.afterNow) {
+			logInfo("Current temperature", "Temperature outside: " + Ute_Temp.state)
+			
 			// Only start if not already active
 			if ((GarageOutlet.state as OnOffType) == OFF) {
-				logInfo("Turning on Mv", "Temperature outside: " + Ute_Temp.state)
+				logInfo("Turning on Mv", "Garage Outlet activated." )
 				
+				// Turn on garage outlet
 				sendCommand(GarageOutlet, ON)
+				Thread::sleep(500);
+				
+				// Make sure we have no active car outlet
+				sendCommand(CarOutlet, OFF)
 		
 				// Turn off after 3 hours
 				timerMv = createTimer(now.plusMinutes(180)) [|
 					sendCommand(GarageOutlet, OFF)
 			]
+			} 
+			else if (temp < 4) {
+				// Start CarOutlet too, when closer to departure
+				// 2 minutes for each celsius degree between -5 and +3
+				// 1 minute for each degree less than -6
+				var carOutletStart = departure
+				var minutesSingle = 4 - temp
+				
+				// Double the minutes for the -5 to +3 interval
+				var minutesDouble = 4 - Math::max(-5, temp)
+				
+				carOutletStart = departure.plusMinutes(-minutesSingle - minutesDouble)
+				
+				if (carOutletStart.beforeNow && (CarOutlet.state as OnOffType) == OFF) {
+					logInfo("Turning on Car Outlet", "Car Outlet activated")
+					sendCommand(CarOutlet, ON)
+				}
 			}
 		}
 		
