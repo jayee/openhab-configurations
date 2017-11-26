@@ -100,8 +100,9 @@ then
 				// Make sure we have no active car outlet
 				sendCommand(CarOutlet, OFF)
 		
-				// Turn off after 3 hours
-				timerMv = createTimer(now.plusMinutes(180)) [|
+				// Turn off after departure
+				timerMv = createTimer(departure.plusMinutes(20)) [|
+					sendCommand(CarOutlet, OFF)
 					sendCommand(GarageOutlet, OFF)
 			]
 			} 
