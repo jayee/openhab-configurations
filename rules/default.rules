@@ -95,7 +95,8 @@ then
 				
 				// Turn on garage outlet
 				sendCommand(GarageOutlet, ON)
-				Thread::sleep(500);
+				try { Thread::sleep(500) } catch (Exception e) {}
+				
 				
 				// Make sure we have no active car outlet
 				sendCommand(CarOutlet, OFF)
@@ -160,7 +161,11 @@ then
 	 */
 
 	sendCommand(GarageOutlet, ON)
+	try { Thread::sleep(500) } catch (Exception e) {}
 
+	// Make sure we have no active car outlet
+	sendCommand(CarOutlet, OFF)
+				
 	var minutes = (receivedCommand as DecimalType).intValue
 
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
@@ -189,7 +194,10 @@ then
 
 	timerMv = createTimer(now.plusMinutes(minutes)) [|
 		sendCommand(GarageOutlet, ON)
-
+		try { Thread::sleep(500) } catch (Exception e) {}
+		// Make sure we have no active car outlet
+		sendCommand(CarOutlet, OFF)
+		
 		// Turn off after 2 hours
 		timerMv = createTimer(now.plusMinutes(120)) [|
 			sendCommand(GarageOutlet, OFF)
@@ -220,6 +228,9 @@ then
 
 	timerMv = createTimer(start) [|
 		sendCommand(GarageOutlet, ON)
+		try { Thread::sleep(500) } catch (Exception e) {}
+		// Make sure we have no active car outlet
+		sendCommand(CarOutlet, OFF)
 
 		// Turn off after 2 hours
 		timerMv = createTimer(now.plusMinutes(120)) [|
