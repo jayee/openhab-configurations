@@ -4,6 +4,7 @@ import org.openhab.model.script.actions.*
 import java.lang.Double
 
 var Timer timerMv
+var Timer timerBorta
 var Number departureMinutesAfterMidnight
 
 rule "Initialize startup"
@@ -18,6 +19,7 @@ then
 		gBelysning?.members.forEach(light | sendCommand(light, light.state as OnOffType))
 		sendCommand(GarageOutlet, GarageOutlet.state as OnOffType)
 		sendCommand(CarOutlet, CarOutlet.state as OnOffType)
+		sendCommand(Bortabelysning, Bortabelysning.state as OnOffType)
 	]
 end
 
@@ -66,6 +68,24 @@ then
 	}
 end
 
+rule "Randomize Bortabelysning"
+when
+	Time cron "0 1/30 23-7 * * ?"
+	//Time cron "10/10 * 19-23 * * ?"
+then
+
+	if (Bortabelysning.state == ON) {
+		val int lightNum = (now.getHourOfDay + now.getMinuteOfHour) % gBortabelysning?.members.size 
+		val light = gBortabelysning?.members.get(lightNum)
+		
+		sendCommand(light, ON)
+	
+		createTimer(now.plusMinutes(10)) [|
+			sendCommand(light, OFF)
+		]
+	}
+end
+
 rule "Turn on Mv dynamically week days depending of temperature"
 when
 	Time cron "0 1/5 3-8 ? * MON-FRI *"
@@ -96,7 +116,6 @@ then
 				// Turn on garage outlet
 				sendCommand(GarageOutlet, ON)
 				try { Thread::sleep(500) } catch (Exception e) {}
-				
 				
 				// Make sure we have no active car outlet
 				sendCommand(CarOutlet, OFF)

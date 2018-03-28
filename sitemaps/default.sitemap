@@ -3,6 +3,7 @@ sitemap default label="Hem" {
      Switch item=Belysning label="Standardbelysning" mappings=[OFF="Av", ON="På"]
      /*Group item=Belysning label="Belysning" icon="switch"*/
      Group item=gBelysning label="Lampor" icon="switch"
+     Switch item=Bortabelysning label="Bortabelysning" mappings=[OFF="Av", ON="På"]
   }
 
 

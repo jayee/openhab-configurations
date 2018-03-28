@@ -7,24 +7,29 @@ Group gMV (Hem)
 Group gMoreLightOn
 Group gLesserLightOn
 Group gNightLights
+Group gBortabelysning
 
 Group:Switch:OR(ON,OFF) Belysning "Belysning [(%d)]" (Hem)
+
+Switch Bortabelysning "Bortabelysning" <switch> (Hem)
+
+
 
 /* Lights */
 
 Switch Kitchen1 "Kökslampa höger" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 1:Command"}
 Switch Kitchen2 "Kökslampa vänster" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 2:Command"}
-Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Nexa 1:Command"}
+Switch LivingRoom1 "Vardagsrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn, gBortabelysning) {tellstick="Nexa 1:Command"}
 Switch LivingRoom2 "Dekorbelysning" <switch> (gBelysning) {tellstick="Nexa 2:Command"}
-Switch Bedroom1 "Sovrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 2:Command"}
-Switch ChildRoom2 "Barnrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Extra Belysning 1:Command"}
-Switch UpStairs "Hall uppe" <switch> (Belysning, gBelysning, gMoreLightOn, gNightLights) {tellstick="Extra Belysning 3:Command"}
-Switch Hallway "Hallen" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 3:Command"}
+Switch Bedroom1 "Sovrumslampa" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Proove 4:Command"}
+Switch UpStairs "Hall uppe" <switch> (Belysning, gBelysning, gMoreLightOn, gNightLights, gBortabelysning) {tellstick="Extra Belysning 3:Command"}
+Switch Hallway "Hallen" <switch> (Belysning, gBelysning, gMoreLightOn, gBortabelysning) {tellstick="Proove 3:Command"}
+// Switch ChildRoom1 "Barnrumslampa 1" <switch> (Belysning, gBelysning, gLesserLightOn) {tellstick="Proove 4:Command"}
+Switch ChildRoom2 "Barnrumslampa 2" <switch> (Belysning, gBelysning, gLesserLightOn, gBortabelysning) {tellstick="Extra Belysning 1:Command"}
 
 
 /*
 Extras:
-Switch X "X" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 4:Command"}
 Switch Y "Y" <switch> (Belysning, gBelysning, gMoreLightOn) {tellstick="Proove 5:Command"}
 */
 

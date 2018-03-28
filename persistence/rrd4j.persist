@@ -5,5 +5,5 @@ Strategies {
 }
 
 Items {
-	gBelysning*,GarageOutlet,CarOutlet,Inne_Temp,Ute_Temp,MvWeekDaysDynamic : strategy = everyChange, restoreOnStartup
+	gBelysning*,GarageOutlet,CarOutlet,Bortabelysning,Inne_Temp,Ute_Temp,MvWeekDaysDynamic : strategy = everyChange, restoreOnStartup
 }
