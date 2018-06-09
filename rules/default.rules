@@ -30,12 +30,19 @@ when
 then
     logInfo("Sun is going away...", "Time: " + Sunset_Time)
 
-    // Light On more group
-    gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
+	// Always turn on group night lights
+	gNightLights?.members.forEach(light | sendCommand(light, ON))
+	
+    var lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + "T22:00:00"
+    
+    // Do not turn on light in more light group if after 22 in the evening
+    if (parse(lessLimit).afterNow) {
+	    gMoreLightOn?.members.forEach(light | sendCommand(light, ON))
+    }
 
-    var lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + "T20:00:00"
+    lessLimit = now.getYear + "-" + now.getMonthOfYear + "-" + now.getDayOfMonth + "T20:00:00"
 
-    // Do not turn on light in lesser light group if after 20 in evening
+    // Do not turn on light in lesser light group if after 20 in the evening
     if (parse(lessLimit).afterNow) {
 		  gLesserLightOn?.members.forEach(light | sendCommand(light, ON))
     }
